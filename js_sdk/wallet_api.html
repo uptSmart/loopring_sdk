@@ -3,7 +3,7 @@
 <html lang="" >
     <head>
         <meta charset="UTF-8">
-        <title>Exchange · Loopring SDK</title>
+        <title>Wallet · Loopring SDK</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 3.6.20">
@@ -56,10 +56,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="user_api.html" />
+    <link rel="next" href="ws_api.html" />
     
     
-    <link rel="prev" href="contract_api.html" />
+    <link rel="prev" href="whitelisted_user_api.html" />
     
 
     </head>
@@ -198,7 +198,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="2.1.5" data-path="exchange_api.html">
+        <li class="chapter " data-level="2.1.5" data-path="exchange_api.html">
             
                 <a href="exchange_api.html">
             
@@ -237,7 +237,7 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.8" data-path="wallet_api.html">
+        <li class="chapter active" data-level="2.1.8" data-path="wallet_api.html">
             
                 <a href="wallet_api.html">
             
@@ -363,7 +363,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Exchange</a>
+        <a href=".." >Wallet</a>
     </h1>
 </div>
 
@@ -378,84 +378,28 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="exchange-part">Exchange Part</h1>
-<h5 id="1-getaccount">1) getAccount</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetAccountRequest = {
-        <span class="hljs-attr">owner</span>: acc.address
-    }
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getAccount(request)
-</code></pre>
-<h5 id="2-getrelayercurrenttime">2) getRelayerCurrentTime</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getRelayerCurrentTime()
-</code></pre>
-<h5 id="3-getfiatprice">3) getFiatPrice</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getFiatPrice({ <span class="hljs-attr">legal</span>: <span class="hljs-string">&apos;USD&apos;</span> })
-</code></pre>
-<h5 id="4-getlatesttokenprices">4) getLatestTokenPrices</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getLatestTokenPrices()
-</code></pre>
-<h5 id="5-getallowances">5) getAllowances</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetAllowancesRequest = {
-        <span class="hljs-attr">owner</span>: acc.address,
-        <span class="hljs-attr">token</span>: <span class="hljs-string">&apos;LRC,ETH,DAI&apos;</span>,
-    }
+                                <h1 id="whitelisted-user-part">Whitelisted User Part</h1>
+<h5 id="1-getuserassets">1) getUserAssets</h5>
+<pre><code class="lang-javascript">    <span class="hljs-comment">// step 1. get account info</span>
+            <span class="hljs-keyword">const</span> request: GetUserAssetsRequest = {
+                <span class="hljs-attr">wallet</span>: <span class="hljs-string">&apos;0xeF041462825bFdF79b2f1f02A70b2753cB5b1516&apos;</span>,
+                <span class="hljs-attr">offset</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">limit</span>: <span class="hljs-number">10</span>,
+            }
 
-    <span class="hljs-keyword">const</span> tokens = <span class="hljs-keyword">await</span> api.getTokens()
+            <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getUserAssets(request)
+</code></pre>
+<h5 id="2-gettokenprices">2) getTokenPrices</h5>
+<pre><code class="lang-javascript">    <span class="hljs-comment">// step 1. get account info</span>
+            <span class="hljs-keyword">const</span> request: GetTokenPricesRequest = {
+                <span class="hljs-attr">token</span>: <span class="hljs-string">&apos;0xdac17f958d2ee523a2206206994597c13d831ec7&apos;</span>
+            }
 
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getAllowances(request, tokens.tokenSymbolMap)
+            <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getTokenPrices(request)
 </code></pre>
-<h5 id="6-getallowances">6) getAllowances</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetAllowancesRequest = {
-        <span class="hljs-attr">owner</span>: acc.address,
-        <span class="hljs-attr">token</span>: <span class="hljs-string">&apos;LRC,ETH,DAI&apos;</span>,
-    }
-
-    <span class="hljs-keyword">const</span> tokens = <span class="hljs-keyword">await</span> api.getTokens()
-
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getAllowances(request, tokens.tokenSymbolMap)
-</code></pre>
-<h5 id="7-gettokenbalances">7) getTokenBalances</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> tokens = <span class="hljs-keyword">await</span> api.getTokens()
-
-    <span class="hljs-keyword">const</span> request: GetTokenBalancesRequest = {
-        <span class="hljs-attr">owner</span>: acc.address,
-        <span class="hljs-attr">token</span>: <span class="hljs-string">&apos;&apos;</span>,
-    }
-
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getTokenBalances(request, tokens.tokenSymbolMap)
-</code></pre>
-<h5 id="8-getmixmarkets">8) getMixMarkets</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getMixMarkets()
-</code></pre>
-<h5 id="9-gettokens">9) getTokens</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getTokens()
-</code></pre>
-<h5 id="10-getdepth">10) getDepth</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetDepthRequest = {
-        <span class="hljs-attr">market</span>: [<span class="hljs-string">&apos;LRC-ETH&apos;</span>]
-    }
-
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getDepth(request)
-</code></pre>
-<h5 id="11-getexchangeinfo">11) getExchangeInfo</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getExchangeInfo()
-</code></pre>
-<h5 id="12-getticker">12) getTicker</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetTickerRequest = {
-        <span class="hljs-attr">market</span>: <span class="hljs-string">&apos;LRC-ETH&apos;</span>,
-    }
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getTicker(request)
-</code></pre>
-<h5 id="13-getalltickers">13) getAllTickers</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getAllTickers()
-</code></pre>
-<h5 id="14-getcandlestick">14) getCandlestick</h5>
-<pre><code class="lang-javascript">    <span class="hljs-keyword">const</span> request: GetCandlestickRequest = {
-        <span class="hljs-attr">market</span>: <span class="hljs-string">&apos;LRC-ETH&apos;</span>,
-        <span class="hljs-attr">interval</span>: TradingInterval.min15,
-        <span class="hljs-attr">limit</span>: <span class="hljs-number">96</span>,
-    }
-    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getCandlestick(request)
+<h5 id="3-getlatesttokenprices">3) getLatestTokenPrices</h5>
+<pre><code class="lang-javascript">    <span class="hljs-comment">// step 1. get account info</span>
+            <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> api.getLatestTokenPrices()
 </code></pre>
 
                                 
@@ -484,12 +428,12 @@
 
             
                 
-                <a href="contract_api.html" class="navigation navigation-prev " aria-label="Previous page: Contract">
+                <a href="whitelisted_user_api.html" class="navigation navigation-prev " aria-label="Previous page: Whitelisted User">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="user_api.html" class="navigation navigation-next " aria-label="Next page: User">
+                <a href="ws_api.html" class="navigation navigation-next " aria-label="Next page: WS REST">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -500,7 +444,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Exchange","level":"2.1.5","depth":2,"next":{"title":"User","level":"2.1.6","depth":2,"path":"js_sdk/user_api.md","ref":"./js_sdk/user_api.md","articles":[]},"previous":{"title":"Contract","level":"2.1.4","depth":2,"path":"js_sdk/contract_api.md","ref":"./js_sdk/contract_api.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Leo Chan","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/exchange_api.md","mtime":"2021-06-19T14:22:39.967Z","type":"markdown"},"gitbook":{"version":"3.6.20","time":"2021-07-12T16:20:04.637Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Wallet","level":"2.1.8","depth":2,"next":{"title":"WS REST","level":"2.1.9","depth":2,"path":"js_sdk/ws_api.md","ref":"./js_sdk/ws_api.md","articles":[]},"previous":{"title":"Whitelisted User","level":"2.1.7","depth":2,"path":"js_sdk/whitelisted_user_api.md","ref":"./js_sdk/whitelisted_user_api.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Leo Chan","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/wallet_api.md","mtime":"2021-07-12T16:16:57.926Z","type":"markdown"},"gitbook":{"version":"3.6.20","time":"2021-07-12T16:20:04.637Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
