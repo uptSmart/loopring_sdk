@@ -1171,6 +1171,7 @@ export class UserAPI extends BaseAPI {
     */
     public async updateAccount(req: loopring_defs.UpdateAccountRequestV3WithPatch) {
 
+        console.log("u1 ");
         const {request, web3, chainId, walletType, isHWAddr: isHWAddrOld,} = req
 
         let isHWAddr = !!isHWAddrOld
@@ -1179,13 +1180,17 @@ export class UserAPI extends BaseAPI {
 
         let errorInfo = undefined
 
+        console.log("u2 ");
         const sigHW = async () => {
+
+            console.log("u3 ");
             const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
             ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
         }
 
         if (walletType === ConnectorNames.MetaMask) {
 
+            console.log("u4 ");
             try {
                 if (isHWAddr) {
                     await sigHW()
@@ -1199,14 +1204,19 @@ export class UserAPI extends BaseAPI {
 
         } else {
 
+            console.log("u5 ");
             const isContractCheck = await isContract(web3, request.owner)
 
             if (isContractCheck) {
+
+                console.log("u6 ");
                 // console.log('3. signUpdateAccountWithDataStructureForContract')
                 const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
                 ecdsaSignature = result.ecdsaSig
                 // console.log('ecdsaSignature:', ecdsaSignature)
             } else {
+
+                console.log("u7 ");
                 await sigHW()
             }
 
@@ -1214,21 +1224,30 @@ export class UserAPI extends BaseAPI {
 
         if (!errorInfo) {
 
-            const reqParams: loopring_defs.ReqParams = {
-                url: LOOPRING_URLs.ACCOUNT_ACTION,
-                bodyParams: request,
-                method: ReqMethod.POST,
-                sigFlag: SIG_FLAG.NO_SIG,
-                ecdsaSignature,
-            }
+            console.log("u8 ");
+            console.log("xxl ecdsaSignature ------");
+            console.log(ecdsaSignature);
+            console.log([
+                LOOPRING_URLs.ACCOUNT_ACTION,
+                request
+            ])
 
-            const raw_data = (await this.makeReq().request(reqParams)).data
-            return {
-                ...this.returnTxHash(raw_data),
-                errorInfo,
-            }
+            // const reqParams: loopring_defs.ReqParams = {
+            //     url: LOOPRING_URLs.ACCOUNT_ACTION,
+            //     bodyParams: request,
+            //     method: ReqMethod.POST,
+            //     sigFlag: SIG_FLAG.NO_SIG,
+            //     ecdsaSignature,
+            // }
+            
+            // console.log("u9 ");
+            // const raw_data = (await this.makeReq().request(reqParams)).data
+            // return {
+            //     ...this.returnTxHash(raw_data),
+            //     errorInfo,
+            // }
 
-
+        
         }
 
         return {

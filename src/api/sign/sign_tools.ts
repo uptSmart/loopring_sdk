@@ -73,10 +73,13 @@ export async function generateKeyPair({
 
   if (!result.error) {
 
+    console.log("xxl :::: 1");
     const keyPair = EdDSA.generateKeyPair(ethUtil.sha256(fm.toBuffer((result.sig))))
+    console.log(keyPair);
     const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)))
     const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)))
     const sk = toHex(toBig(keyPair.secretKey))
+    console.log(sk);
 
     return {
       keyPair,
@@ -317,7 +320,7 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
       let hash: any = sigUtil.TypedDataUtils.sign(typedData)
       hash = fm.toHex(hash)
 
-      // console.log('WithoutDataStruct hash:', hash)
+      console.log('xxl ---- WithoutDataStruct hash:', hash)
 
       if (!walletType) {
         throw Error('no walletType set!')
@@ -409,7 +412,9 @@ export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, cha
 
 export async function signUpdateAccountWithDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
   const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
-  // console.log('typedData:', typedData)
+  console.log('xxl typedData: --- ')
+  console.log(typedData);
+  
   const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.HasDataStruct)
   return result
 }

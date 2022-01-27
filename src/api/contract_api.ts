@@ -140,6 +140,29 @@ export async function getNonce(web3: Web3, addr: string) {
     return -1
 }
 
+/**
+ * uptSmart task 1.0 getRawTx
+ */
+export async function getRawTx(from: string, to: string, value: string, data: any, 
+    chainId: ChainId, nonce: number, gasPrice: any, gasLimit: number) {
+
+    gasPrice = fm.fromGWEI(gasPrice).toNumber()
+    
+    const _value = new BN(value)
+    const rawTx = {
+        from,
+        to,
+        value: _value.toString() ,
+        data,
+        chainId,
+        nonce,
+        gasPrice,
+        gasLimit,
+    }
+    
+    return rawTx
+}
+
 export async function sendRawTx(web3: any, from: string, to: string, value: string, data: any, 
     chainId: ChainId, nonce: number, gasPrice: any, gasLimit: number, sendByMetaMask: boolean = true) {
 
@@ -160,17 +183,23 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
     }
 
     if (sendByMetaMask) {
+        console.log("xxl sendRawTx 0 ....");
         return await sendTransaction(web3, rawTx)
     }
 
+    console.log("xxl sendRawTx 1 ....");
     const res = await signEthereumTx(web3, from, rawTx, chainId)
 
     if (res?.rawTx) {
+        console.log("xxl sendRawTx 2 ....");
         return await sendTransaction(web3, res.rawTx)
     }
     
     return res
 }
+
+
+
 
 function _genContractData(Contract: any, method: string, data: any) {
     return Contract.encodeInputs(method, data)
@@ -286,6 +315,47 @@ export async function approveMax(
         nonce, gasPrice, gasLimit, sendByMetaMask)
 
 }
+
+
+/**
+ * uptSmart task 1.0 getDepositTx
+ */
+export async function getDepositTx(
+    from: string,
+    exchangeAddress: string,
+    token: TokenInfo,
+    value: number,
+    fee: number,
+    gasPrice: number,
+    gasLimit: number,
+    chainId: ChainId = ChainId.GOERLI,
+    nonce: number
+) {
+
+    let valueC = fm.toBig(value).times('1e' + token.decimals)
+
+    const amount = fm.toHex(valueC)
+
+    const data = genExchangeData(ERC20Method.Deposit, {
+        tokenAddress: token.address,
+        amount,
+        from,
+        to: from,
+        extraData: '',
+    })
+
+    if (token.type === 'ETH') {
+        valueC = valueC.plus(fee)
+    } else {
+        valueC = fm.toBig(fee)
+    }
+
+    return await getRawTx(from, exchangeAddress, valueC.toFixed(), data, chainId, 
+        nonce, gasPrice, gasLimit)
+
+}
+
+
 
 /**
  * forceWithdrawal

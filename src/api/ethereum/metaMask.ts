@@ -91,6 +91,15 @@ export async function signMessage(web3: any, account: string, pwd: string, messa
 }
 
 export async function personalSign(web3: any, account: string | undefined, pwd: string, msg: string, walletType: ConnectorNames) {
+  
+  console.log("xxl personalSign ...");
+  console.log([
+    account,
+    pwd,
+    msg,
+    walletType
+  ])
+  console.log(2);
 
   if (!account) {
     return ({ error: 'personalSign got no account' });
@@ -100,10 +109,12 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
     try {
       
       web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
-        // console.log('msg:', msg)
-        // console.log('walletType:', walletType, ' personal result:', result)
+        
+        //console.log('msg:', msg)
+        //console.log('walletType:', walletType, ' personal result:', result)
         if (!err) {
           if (walletType === ConnectorNames.WalletLink) {
+            console.log(1.1);
             const valid: any = await walletLinkValid(account, msg, result);
             if (valid.result) {
               resolve({ sig: result });
@@ -112,6 +123,7 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
             }
             return;
           } else if (walletType === ConnectorNames.Authereum) {
+            console.log(1.2);
             const valid: any = await authereumValid(web3, account, msg, result);
             if (valid.result) {
               resolve({ sig: result });
@@ -120,16 +132,25 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
             }
             return;
           }
-  
+          
+          console.log(1.3);
+          console.log(result);
+          
           // console.log('try to exc ecRecover !!!')
-  
+          
           const valid: any = await ecRecover(web3, account, msg, result);
-          // console.log('ecRecover valid:', valid)
+          //console.log('ecRecover valid:', valid)
+          console.log('ecRecover valid:')
+          console.log(valid)
   
           // const valid: any = await ecRecover2(account, msg, result)
           // console.log('ecRecover2 valid:', valid)
   
           if (valid.result) {
+
+            console.log("1.5");
+            console.log({ sig: result });
+
             resolve({ sig: result });
           } else {
             const walletValid: any = await contractWalletValidate(
@@ -223,6 +244,12 @@ export async function ecRecover2(account: string, message: string, signature: an
 export async function ecRecover(web3: Web3, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     try {
+
+     console.log("xxl ecRecover 1.4");
+     console.log([
+      msg, sig
+     ])
+
       web3.eth.personal.ecRecover(msg, sig, function (err: any, address: string) {
         if (!err)
           resolve({
