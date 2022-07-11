@@ -1006,3 +1006,34 @@ export function getAmmExitEcdsaTypedData(data: ExitAmmPoolRequest, patch: AmmPoo
   };
   return typedData
 }
+
+
+export const getEdDSASigWithPoseidonAndHash = (inputs: any, PrivateKey: string | undefined) => {
+
+  const hasher = Poseidon.createHash(inputs.length + 1, 6, 53)
+  const hash = hasher(inputs).toString(10)
+
+  return { 
+    sig:genSigWithPadding(PrivateKey, hash),
+    hash:hash
+  }
+
+}
+
+
+export function get_EddsaSig_Lock_Hash(
+  request: any,
+  eddsaKey: string
+) {
+
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.accountId,
+    request.token.tokenId,
+    request.token.volume,
+    request.timestamp
+  ];
+
+  return getEdDSASigWithPoseidonAndHash(inputs, eddsaKey);
+
+}

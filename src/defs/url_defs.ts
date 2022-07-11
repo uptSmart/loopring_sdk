@@ -96,4 +96,6 @@ export enum LOOPRING_URLs {
     GET_USER_NFT_DEPOSIT_HISTORY = '/api/v3/user/nft/deposits',
     GET_USER_NFT_WITHDRAW_HISTORY = '/api/v3/user/nft/withdrawals',
 
+    POST_LOCK_ASSETS = '/api/v3/lockAssets'
+
 }

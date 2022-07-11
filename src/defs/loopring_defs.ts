@@ -1833,7 +1833,6 @@ export interface GetAccountServicesRequest {
 }
 
 // NFT
-
 export interface GetUserNFTBalancesRequest {
     accountId: number
     nftDatas?:string
@@ -1982,3 +1981,14 @@ export interface UserNFTTransferHistoryTx {
     blockId : number,
     indexInBlock : number
 }
+
+export type LockAssetsRequest = {
+    accountId: number
+    eddsaSignature: string
+    exchange: string
+    lockedUntil: number
+    tag?: string
+    timestamp: number
+    token: TokenVolumeV3
+}
+
